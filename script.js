@@ -3,13 +3,17 @@ const popup = document.getElementById('popup-container');
 const message_el = document.getElementById('success-message');
 const wrongLetter_el = document.getElementById('wrong-letters');
 const items = document.querySelectorAll('.item');
+const message = document.getElementById('message');
+const playAgainBtn = document.getElementById('play-again');
+
+
 
 const correctLetters = [];
 const wrongLetters = [];
-const selectedWord = getRandomWord();
+let selectedWord = getRandomWord();
 
 function getRandomWord() {
-    const words = ["javascrıpt", "python", "flutter", "java", "html", "Angular"];
+    const words = ["react", "python", "flutter", "java", "html", "angular"];
 
     return words[Math.floor(Math.random() * words.length)];
 }
@@ -58,6 +62,26 @@ if(wrongLetters.length === items.length) {
 
 }
 
+function displayMessage (){
+    message.classList.add('show');
+    
+    setTimeout(() => {
+        message.classList.remove('show')
+    }, 2000);
+}
+
+playAgainBtn.addEventListener('click', function(e) {
+    correctLetters.splice(0);
+    wrongLetters.splice(0);
+
+    selectedWord = getRandomWord();
+
+    displayWord();
+    updateWrongLetters();
+    
+    popup.style.display ='none';
+})
+
 window.addEventListener("keydown",function(e) {
     if (e.keyCode >= 65 && e.keyCode <= 90) {
         const letter = e.key;
@@ -68,12 +92,16 @@ window.addEventListener("keydown",function(e) {
                 displayWord();
             } else {
                 // bu harfi zaten eklediniz.
+                displayMessage();
+         
             }
         }else {
             if(!wrongLetters.includes(letter)) {
                 wrongLetters.push(letter);
                 // hatalı harfler güncelle.
                 updateWrongLetters();
+            }else {
+                displayMessage();
             }
         }
     }
